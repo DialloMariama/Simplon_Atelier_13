@@ -9,12 +9,14 @@ $erreur = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["connexion"])) {
     $email = $_POST["email"];
-    $password = $_POST["password"];
+    $password = md5($_POST["password"]);
+
     $sql = "SELECT * FROM utilisateurs WHERE email = ? AND password = ?";
     $stmt = $db->prepare($sql);
+
+
     $stmt->execute([$email, $password]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
     if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_nom'] = $user['nom'];
@@ -22,11 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["connexion"])) {
         header('Location: profil.php');
     } else {
         $erreur = "Adresse e-mail ou mot de passe incorrect.";
-        header('Location: inscription.php');
+        // header('Location: inscription.php');
 
     }
 }
 ?>
+
+
 
 
 

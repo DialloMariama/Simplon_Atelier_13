@@ -12,8 +12,6 @@ require_once('requete.php');
     <title>E-Taxibokko</title>
 </head>
 
-<body>
-    <button type="submit" class="between" name="utilisateurs">Liste des utilisateurs</button>
 
     <section>
         <form action="" method="post" name="formulaire1">

@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('bd.php');
+date_default_timezone_set('Africa/Dakar');
+
 
 $nom = "";
 $prenom = "";
@@ -8,6 +10,7 @@ $email = "";
 $poids = "";
 $tel = "";
 $password = "";
+$date_inscription = date("Y-m-d H:i:s");
 $erreurs = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["suivant"])) {
@@ -33,9 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $prenom = $_POST["prenom"];
         $tel = $_POST["tel"];
         $email = $_POST["email"];
-    
-        $regex_nom = "/^[a-zA-Z]{2,}$/";
-        $regex_prenom = "/^[a-zA-Z]{3,}$/";
+
+        $regex_nom = "/^[a-zA-Z ']{2,}$/";
+        $regex_prenom = "/^[a-zA-Z ']{3,}$/";
+       
         if (!preg_match($regex_nom, $_POST["nom"])) {
             $erreurs[] = "Le nom est invalide.";
         }
@@ -56,32 +60,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             echo "</ul>";
         } else {
-            $email_existe = "SELECT COUNT(*) FROM utilisateurs WHERE email = ?";
-            $stmt_email_existe = $db->prepare($email_existe);
-            $stmt_email_existe->execute([$email]);
-            $count_email_existe = $stmt_email_existe->fetchColumn();
+            $email_exist = "SELECT COUNT(*) FROM utilisateurs WHERE email = ?";
+            $stmt_email_exist = $db->prepare($email_exist);
+            $stmt_email_exist->execute([$email]);
+            $count_email_exist = $stmt_email_exist->fetchColumn();
 
-            $tel_existe = "SELECT COUNT(*) FROM utilisateurs WHERE tel = ?";
-            $stmt_tel_existe = $db->prepare($tel_existe);
-            $stmt_tel_existe->execute([$tel]);
-            $count_tel_existe = $stmt_tel_existe->fetchColumn();
+            $tel_exist = "SELECT COUNT(*) FROM utilisateurs WHERE tel = ?";
+            $stmt_tel_exist = $db->prepare($tel_exist);
+            $stmt_tel_exist->execute([$tel]);
+            $count_tel_exist = $stmt_tel_exist->fetchColumn();
+            
+            $date_inscription = date("Y-m-d H:i:s");
 
-            if ($count_email_existe > 0) {
+
+            if ($count_email_exist > 0) {
                 array_push($erreurs, "Cet e-mail est déjà enregistré.");
             }
 
-            if ($count_tel_existe > 0) {
+            if ($count_tel_exist > 0) {
                 array_push($erreurs, "Ce numéro de téléphone est déjà enregistré.");
             }
 
-            if ($count_email_existe === 0 && $count_tel_existe === 0) {
+            if ($count_email_exist === 0 && $count_tel_exist === 0) {
                 $password = md5($_SESSION['password']);
+                $date_inscription = date("Y-m-d H:i:s");
                 $email = $_POST["email"];
 
-                $sql = "INSERT INTO utilisateurs (nom, prenom, tel, email, password) VALUES (?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO utilisateurs (nom, prenom, tel, email, password, date_inscription) VALUES (?, ?, ?, ?, ?, ?)";
 
                 $stmt = $db->prepare($sql);
-                $stmt->execute([$nom, $prenom, $tel, $email, $password]);
+                $stmt->execute([$nom, $prenom, $tel, $email, $password, $date_inscription]);
                 header('Location: connexion.php');
             }      
         }

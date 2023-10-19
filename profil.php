@@ -21,8 +21,8 @@
         echo "<p>Bonjour $prenom $nom, vous avez réussi à vous connecter.</p>";
         
     }
-
-    
     ?>
+    <button type="submit" class="between" name="utilisateurs"><a href="liste_utilisateurs_inscrits.php">Liste des utilisateurs</a></button>
+
 </body>
 </html>
