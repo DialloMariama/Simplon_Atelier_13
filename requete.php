@@ -56,25 +56,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             echo "</ul>";
         } else {
-            $email_exist = "SELECT COUNT(*) FROM utilisateurs WHERE email = ?";
-            $stmt_email_exist = $db->prepare($email_exist);
-            $stmt_email_exist->execute([$email]);
-            $count_email_exist = $stmt_email_exist->fetchColumn();
+            $email_existe = "SELECT COUNT(*) FROM utilisateurs WHERE email = ?";
+            $stmt_email_existe = $db->prepare($email_existe);
+            $stmt_email_existe->execute([$email]);
+            $count_email_existe = $stmt_email_existe->fetchColumn();
 
-            $tel_exist = "SELECT COUNT(*) FROM utilisateurs WHERE tel = ?";
-            $stmt_tel_exist = $db->prepare($tel_exist);
-            $stmt_tel_exist->execute([$tel]);
-            $count_tel_exist = $stmt_tel_exist->fetchColumn();
+            $tel_existe = "SELECT COUNT(*) FROM utilisateurs WHERE tel = ?";
+            $stmt_tel_existe = $db->prepare($tel_existe);
+            $stmt_tel_existe->execute([$tel]);
+            $count_tel_existe = $stmt_tel_existe->fetchColumn();
 
-            if ($count_email_exist > 0) {
+            if ($count_email_existe > 0) {
                 array_push($erreurs, "Cet e-mail est déjà enregistré.");
             }
 
-            if ($count_tel_exist > 0) {
+            if ($count_tel_existe > 0) {
                 array_push($erreurs, "Ce numéro de téléphone est déjà enregistré.");
             }
 
-            if ($count_email_exist === 0 && $count_tel_exist === 0) {
+            if ($count_email_existe === 0 && $count_tel_existe === 0) {
                 $password = md5($_SESSION['password']);
                 $email = $_POST["email"];
 
